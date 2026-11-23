@@ -5,4 +5,4 @@ primevideo  discoveryplus  lionsgateplay  aha  hoichoi  erosnow
 shemaroome  hungamaplay  chaupal  planetmarathi  epicon  docubay
 klikk  mxplayer
 
-Already included: jiohotstar  sonyliv  zee5  altbalaji  fancode
+Already included: jiohotstar  sonyliv  zee5  altbalaji  sunnxt  fancode
