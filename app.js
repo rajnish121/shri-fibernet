@@ -1,7 +1,7 @@
 /* WhatsApp number (country code + digits, no + or spaces): +91 85889 91413 */
 const WA_NUMBER="918588991413";
 
-const PLANS=[{mbps:50,price:{1:449,3:1249,6:2499,12:4999}},{mbps:100,price:{1:499,3:1399,6:2799,12:5599}},{mbps:150,price:{1:549,3:1499,6:2999,12:6299}},{mbps:200,price:{1:599,3:1649,6:3399,12:6999}},{mbps:300,price:{1:699,3:1899,6:3899,12:7999}},{mbps:400,price:{1:849,3:2349,6:4899,12:9899}},{mbps:600,price:{1:1199,3:3299,6:6599,12:13199}},{mbps:1000,price:{1:1999,3:5499,6:10999,12:21999}}];
+const PLANS=[{mbps:50,price:{1:449,3:1249,6:2499,12:4999}},{mbps:100,price:{1:499,3:1399,6:2799,12:5599}},{mbps:150,price:{1:549,3:1499,6:2999,12:6299}},{mbps:200,price:{1:599,3:1649,6:3399,12:6999}},{mbps:300,price:{1:699,3:1899,6:3899,12:7999}},{mbps:400,price:{1:849,3:2349,6:4899,12:9899}},{mbps:600,quote:true},{mbps:1000,quote:true}];
 /* OTT platforms. Logos load automatically from the ott folder: put a file named like the app, lowercase, letters and numbers only, for example ott/hoichoi.png or ott/primevideo.svg (png or svg). Apps without a file show a name tile. */
 const OTT=[["JioHotstar","#1f4fd8"],["SonyLIV","#7a7a7a"],["ZEE5","#7a2bd9"],["Prime Video","#0a8ad6"],["Discovery+","#1d5cff"],["Lionsgate Play","#d4161c"],["Sun NXT","#f08a00"],["Aha","#f26b00"],["Hoichoi","#e5262b"],["ALTBalaji","#e5262b"],["Eros Now","#c4122f"],["ShemarooMe","#e8590c"],["Hungama Play","#e11d74"],["Chaupal","#2e7d32"],["Planet Marathi","#c2185b"],["FanCode","#f5821f"],["Epic On","#8e24aa"],["Docubay","#00796b"],["Klikk","#d81b60"],["MX Player","#1e88e5"]];
 const slug=n=>n.toLowerCase().replace(/[^a-z0-9]/g,"");
@@ -26,7 +26,7 @@ document.querySelectorAll(".stats").forEach(s=>io.observe(s));
 if($("gn")){const sp=[50,100,150,200,300,400,600,1000];let k=7,cur=1000;$("gf").style.transition="none";
   const set=v=>{const g=v>=999.5;$("gn").textContent=g?1:Math.round(v);$("gu").textContent=g?"Gbps":"Mbps";$("gf").style.strokeDashoffset=540*(1-v/1000*.78)};set(1000);
   setInterval(()=>{k=(k+1)%8;const from=cur,to=sp[k],t0=performance.now();(function f(t){const p=Math.min((t-t0)/900,1);cur=from+(to-from)*(1-Math.pow(1-p,3));set(cur);if(p<1)requestAnimationFrame(f)})(t0)},2400);
-  $("rail").innerHTML=PLANS.map(p=>`<a href="plans/${p.mbps}-mbps.html"><b>${su(p.mbps)[0]}</b><span>${su(p.mbps)[1]} unlimited</span><em>From Rs ${inr(p.price[1])}</em><small>per month</small></a>`).join("");
+  $("rail").innerHTML=PLANS.map(p=>`<a href="plans/${p.mbps}-mbps.html"><b>${su(p.mbps)[0]}</b><span>${su(p.mbps)[1]} unlimited</span><em>${p.quote?"Ask us for rates":"From Rs "+inr(p.price[1])}</em><small>${p.quote?"reach out on WhatsApp":"per month"}</small></a>`).join("");
   const rows=[...document.querySelectorAll(".rrow")],fmt=m=>{const s=16000/m;return s<60?Math.round(s)+" seconds":(s/60).toFixed(1)+" minutes"};
   rows.forEach(r=>r.querySelector("span").textContent="2 GB in "+fmt(+r.dataset.m));let raf;
   $("raceBtn").onclick=()=>{cancelAnimationFrame(raf);rows.forEach(r=>{r.classList.remove("done");r.querySelector("i").style.width="0";r.querySelector("span").textContent="downloading"});
@@ -37,21 +37,21 @@ if($("gn")){const sp=[50,100,150,200,300,400,600,1000];let k=7,cur=1000;$("gf").
 /* plans page */
 function cards(){
   $("seg").innerHTML=TERMS.map(t=>`<button type="button" data-t="${t}" aria-pressed="${t===term}">${lbl(t)}</button>`).join("");
-  $("grid").innerHTML=PLANS.map(p=>{const tot=p.price[term],pm=Math.round(tot/term),sv=p.price[1]*term-tot;
+  $("grid").innerHTML=PLANS.map(p=>{const q=!!p.quote,tot=q?0:p.price[term],pm=q?0:Math.round(tot/term),sv=q?0:p.price[1]*term-tot;
     const per=term===1?"Pay month to month":`Rs ${inr(pm)} a month`+(sv>0?` <mark>Save Rs ${inr(sv)}</mark>`:"");
-    return `<article class="card" data-m="${p.mbps}"><span class="tag" style="display:none">Suggested for you</span><div class="mbps">${su(p.mbps)[0]}<small>${su(p.mbps)[1]}</small></div><div class="unl">Unlimited internet</div><div class="price"><sup>Rs</sup><span class="pn" data-m="${p.mbps}" data-v="${tot}">${inr(tot)}</span></div><div class="per">${per}</div><ul>${FEATS.map(f=>`<li>${f}</li>`).join("")}</ul><div class="oapps"><span>Included OTT apps</span><div>${["JioHotstar","SonyLIV","ZEE5","ALTBalaji"].map(n=>`<img src="${root}ott/${slug(n)}.png" alt="${n}" title="${n}" onerror="this.remove()">`).join("")}<em>+${OTT.length-4} more</em></div></div>
-    <a class="btn" target="_blank" rel="noopener" href="${waLink(`Hi Shri Fibernet, I want the ${sn(p.mbps)} plan for ${lbl(term)} (Rs ${tot}).`)}">Get started</a><a class="more" href="plans/${p.mbps}-mbps.html">Plan details</a></article>`}).join("");
+    return `<article class="card" data-m="${p.mbps}"><span class="tag" style="display:none">Suggested for you</span><div class="mbps">${su(p.mbps)[0]}<small>${su(p.mbps)[1]}</small></div><div class="unl">Unlimited internet</div>${q?`<div class="price quote">Reach out to us</div><div class="per">for the best rates on this speed</div>`:`<div class="price"><sup>Rs</sup><span class="pn" data-m="${p.mbps}" data-v="${tot}">${inr(tot)}</span></div><div class="per">${per}</div>`}<ul>${FEATS.map(f=>`<li>${f}</li>`).join("")}</ul><div class="oapps"><span>Included OTT apps</span><div>${["JioHotstar","SonyLIV","ZEE5","ALTBalaji"].map(n=>`<img src="${root}ott/${slug(n)}.png" alt="${n}" title="${n}" onerror="this.remove()">`).join("")}<em>+${OTT.length-4} more</em></div></div>
+    <a class="btn" target="_blank" rel="noopener" href="${waLink(q?`Hi Shri Fibernet, I am interested in the ${sn(p.mbps)} plan. Please share the rates.`:`Hi Shri Fibernet, I want the ${sn(p.mbps)} plan for ${lbl(term)} (Rs ${tot}).`)}">${q?"Ask for rates":"Get started"}</a><a class="more" href="plans/${p.mbps}-mbps.html">Plan details</a></article>`}).join("");
   window._pv=window._pv||{};
   document.querySelectorAll(".pn").forEach(el=>{const to=+el.dataset.v,m=el.dataset.m,from=window._pv[m]===undefined?to:window._pv[m];window._pv[m]=to;if(from===to)return;
     const t0=performance.now();(function f(t){const k=Math.min((t-t0)/550,1);el.textContent=inr(Math.round(from+(to-from)*(1-Math.pow(1-k,3))));if(k<1)requestAnimationFrame(f)})(t0)});
-  $("tbl").innerHTML=`<tr><th>Speed</th>${TERMS.map(t=>`<th>${lbl(t)}</th>`).join("")}<th>Best per month</th></tr>`+PLANS.map(p=>`<tr><td><a href="plans/${p.mbps}-mbps.html">${sn(p.mbps)}</a></td>${TERMS.map(t=>`<td>Rs ${inr(p.price[t])}</td>`).join("")}<td>Rs ${inr(Math.round(p.price[12]/12))}</td></tr>`).join("");
+  $("tbl").innerHTML=`<tr><th>Speed</th>${TERMS.map(t=>`<th>${lbl(t)}</th>`).join("")}<th>Best per month</th></tr>`+PLANS.map(p=>`<tr><td><a href="plans/${p.mbps}-mbps.html">${sn(p.mbps)}</a></td>${p.quote?`<td colspan="5">Reach out to us for the best rates</td>`:TERMS.map(t=>`<td>Rs ${inr(p.price[t])}</td>`).join("")+`<td>Rs ${inr(Math.round(p.price[12]/12))}</td>`}</tr>`).join("");
   finder()}
 const USES=[{k:"Browsing & calls",d:"Social, email, WhatsApp",m:5},{k:"HD streaming",d:"OTT, TV, online classes",m:12},{k:"4K & work from home",d:"Video meetings, 4K shows",m:25},{k:"Gaming & big downloads",d:"Online games, updates",m:40}];let use=1,touched=false;
 function finder(){const p=+$("people").value,d=+$("devices").value;$("peopleOut").textContent=p;$("devOut").textContent=d;
   const need=(p*USES[use].m+d*2)*1.25,rec=PLANS.map(x=>x.mbps).find(m=>m>=need)||1000,pl=PLANS.find(x=>x.mbps===rec);
   $("recNum").textContent=su(rec)[0];$("recUnit").textContent=su(rec)[1];$("recBar").style.width=rec/10+"%";
   $("recText").textContent=`${p} ${p===1?"person":"people"} and ${d} devices doing ${USES[use].k.toLowerCase()} need roughly ${Math.round(need)} Mbps with headroom.`+(need>1000?" That is above our top plan, so 1 Gbps is the best fit.":"");
-  $("recBtn").href=waLink(`Hi Shri Fibernet, I want the ${sn(rec)} plan for ${lbl(term)} (Rs ${pl.price[term]}).`);
+  $("recBtn").href=waLink(pl.quote?`Hi Shri Fibernet, I am interested in the ${sn(rec)} plan. Please share the rates.`:`Hi Shri Fibernet, I want the ${sn(rec)} plan for ${lbl(term)} (Rs ${pl.price[term]}).`);
   document.querySelectorAll(".card").forEach(c=>{const on=touched&&+c.dataset.m===rec;c.classList.toggle("rec",on);c.querySelector(".tag").style.display=on?"":"none"})}
 if($("grid")){
   $("use").innerHTML=USES.map((u,i)=>`<button type="button" data-u="${i}" aria-pressed="${i===use}">${u.k}<small>${u.d}</small></button>`).join("");
@@ -62,7 +62,8 @@ if($("grid")){
 
 /* plan detail page */
 if($("detail")){const p=PLANS.find(x=>x.mbps===+$("detail").dataset.m);
-  $("detail").innerHTML=`<h3 style="font-size:24px;padding:18px 0 4px">Choose your duration</h3>`+TERMS.map(t=>{const tot=p.price[t],sv=p.price[1]*t-tot;
+  if(p.quote){$("detail").innerHTML=`<h3 style="font-size:24px;padding:18px 0 8px">Rates on request</h3><p style="color:var(--mute);margin-bottom:20px">Reach out to us for the best rates on the ${sn(p.mbps)} plan. We will confirm availability for your address too.</p><a class="btn btn-red big" target="_blank" rel="noopener" href="${waLink(`Hi Shri Fibernet, I am interested in the ${sn(p.mbps)} plan. Please share the rates.`)}">Reach out on WhatsApp</a>`}
+  else $("detail").innerHTML=`<h3 style="font-size:24px;padding:18px 0 4px">Choose your duration</h3>`+TERMS.map(t=>{const tot=p.price[t],sv=p.price[1]*t-tot;
   return `<div class="prow"><div><b>Rs ${inr(tot)}</b><span>${lbl(t)}`+(t>1?` · Rs ${inr(Math.round(tot/t))} a month`+(sv>0?` · save Rs ${inr(sv)}`:""):" · pay monthly")+`</span></div><a class="btn btn-red" target="_blank" rel="noopener" href="${waLink(`Hi Shri Fibernet, I want the ${sn(p.mbps)} plan for ${lbl(t)} (Rs ${tot}).`)}">Get started</a></div>`}).join("")}
 
 /* services: tabs + download bars */

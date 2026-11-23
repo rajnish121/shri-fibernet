@@ -280,3 +280,9 @@ body{animation:pagein .6s both}
 .per mark{white-space:nowrap}
 .card ul{font-size:14px}.card li{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .card{padding:24px 18px}
+
+/* transparent logo, no white tile */
+.logo,.flogo{background:none;padding:0;border-radius:0}
+.logo img{height:46px}.flogo{height:52px}
+.price.quote{font:800 24px/1.15 var(--head);letter-spacing:-.02em;padding:6px 0 4px}
+.tbl td[colspan]{color:var(--mute)}
