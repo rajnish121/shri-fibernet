@@ -15,6 +15,7 @@ const root=(document.querySelector('link[href$="style.css"]').getAttribute("href
 document.querySelectorAll("[data-wa]").forEach(a=>{a.href=waLink(a.dataset.wa);a.target="_blank";a.rel="noopener"});
 $("yr").textContent=new Date().getFullYear();
 const mb=$("menuBtn"),mn=$("menu");mb.onclick=()=>mb.setAttribute("aria-expanded",mn.classList.toggle("open"));
+document.querySelectorAll(".dd > a").forEach(l=>l.addEventListener("click",e=>{if(innerWidth<=960){e.preventDefault();const d=l.parentNode,o=d.classList.contains("open");document.querySelectorAll(".dd.open").forEach(x=>x.classList.remove("open"));if(!o)d.classList.add("open")}}));
 
 /* counters */
 function countUp(el){const n=+el.dataset.n,s=el.dataset.s||"",p=el.dataset.p||"";if(!n){el.textContent=p+n+s;return}
