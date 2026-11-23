@@ -286,3 +286,5 @@ body{animation:pagein .6s both}
 .logo img{height:46px}.flogo{height:52px}
 .price.quote{font:800 24px/1.15 var(--head);letter-spacing:-.02em;padding:6px 0 4px}
 .tbl td[colspan]{color:var(--mute)}
+
+.tnc{font-size:12.5px;color:var(--mute);margin-top:14px}

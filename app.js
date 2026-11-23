@@ -5,7 +5,7 @@ const PLANS=[{mbps:50,price:{1:449,3:1249,6:2499,12:4999}},{mbps:100,price:{1:49
 /* OTT platforms. Logos load automatically from the ott folder: put a file named like the app, lowercase, letters and numbers only, for example ott/hoichoi.png or ott/primevideo.svg (png or svg). Apps without a file show a name tile. */
 const OTT=[["JioHotstar","#1f4fd8"],["SonyLIV","#7a7a7a"],["ZEE5","#7a2bd9"],["Prime Video","#0a8ad6"],["Discovery+","#1d5cff"],["Lionsgate Play","#d4161c"],["Sun NXT","#f08a00"],["Aha","#f26b00"],["Hoichoi","#e5262b"],["ALTBalaji","#e5262b"],["Eros Now","#c4122f"],["ShemarooMe","#e8590c"],["Hungama Play","#e11d74"],["Chaupal","#2e7d32"],["Planet Marathi","#c2185b"],["FanCode","#f5821f"],["Epic On","#8e24aa"],["Docubay","#00796b"],["Klikk","#d81b60"],["MX Player","#1e88e5"]];
 const slug=n=>n.toLowerCase().replace(/[^a-z0-9]/g,"");
-const TERMS=[1,3,6,12],FEATS=["5G router free to use*","350 IPTV channels","20 OTT apps","Zero installation charges*","Free landline*"];
+const TERMS=[1,3,6,12],FEATS=["5G router free to use*","350 IPTV channels","20 OTT apps*","Zero installation charges*","Free landline*"];
 const $=id=>document.getElementById(id),inr=n=>n.toLocaleString("en-IN"),waLink=m=>"https://wa.me/"+WA_NUMBER+"?text="+encodeURIComponent(m);
 const sn=m=>m>=1000?m/1000+" Gbps":m+" Mbps",su=m=>m>=1000?[m/1000,"Gbps"]:[m,"Mbps"];
 const lbl=t=>t+(t===1?" month":" months");
@@ -78,6 +78,7 @@ document.querySelectorAll("[data-ott]").forEach(el=>{
   const all=OTT.map(tile).join("");
   if(el.dataset.ott==="marquee"){el.classList.add("marq");const rv=OTT.slice().reverse().map(tile).join("");el.innerHTML=`<div class="mtrack">${all}${all}</div><div class="mtrack rev">${rv}${rv}</div>`}
   else{el.classList.add("ogrid");el.innerHTML=all}
+  el.insertAdjacentHTML("afterend",'<p class="tnc wrap">*T&amp;C apply. OTT apps are provided by the respective platforms and their availability may change.</p>');
 });
 
 /* corporate page */
