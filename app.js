@@ -2,8 +2,8 @@
 const WA_NUMBER="918588991413";
 
 const PLANS=[{mbps:50,price:{1:449,3:1249,6:2499,12:4999}},{mbps:100,price:{1:499,3:1399,6:2799,12:5599}},{mbps:150,price:{1:549,3:1499,6:2999,12:6299}},{mbps:200,price:{1:599,3:1649,6:3399,12:6999}},{mbps:300,price:{1:699,3:1899,6:3899,12:7999}},{mbps:400,price:{1:849,3:2349,6:4899,12:9899}},{mbps:600,price:{1:1199,3:3299,6:6599,12:13199}},{mbps:1000,price:{1:1999,3:5499,6:10999,12:21999}}];
-/* OTT platforms: edit this list. Add a third value like "ott/hoichoi.png" (put the file in the ott folder) to show a logo image instead of the name tile. */
-const OTT=[["JioHotstar","#1f4fd8","ott/jiohotstar.png"],["SonyLIV","#7a7a7a","ott/sonyliv.png"],["ZEE5","#7a2bd9","ott/zee5.png"],["Prime Video","#0a8ad6"],["Discovery+","#1d5cff"],["Lionsgate Play","#d4161c"],["Sun NXT","#f08a00"],["Aha","#f26b00"],["Hoichoi","#e5262b"],["ALTBalaji","#e5262b","ott/altbalaji.png"],["Eros Now","#c4122f"],["ShemarooMe","#e8590c"],["Hungama Play","#e11d74"],["Chaupal","#2e7d32"],["Planet Marathi","#c2185b"],["FanCode","#f5821f"],["Epic On","#8e24aa"],["Docubay","#00796b"],["Klikk","#d81b60"],["MX Player","#1e88e5"]];
+/* OTT platforms. Logos load automatically from the ott folder: put a file named like the app, lowercase, letters and numbers only, for example ott/hoichoi.png or ott/primevideo.svg (png or svg). Apps without a file show a name tile. */
+const OTT=[["JioHotstar","#1f4fd8"],["SonyLIV","#7a7a7a"],["ZEE5","#7a2bd9"],["Prime Video","#0a8ad6"],["Discovery+","#1d5cff"],["Lionsgate Play","#d4161c"],["Sun NXT","#f08a00"],["Aha","#f26b00"],["Hoichoi","#e5262b"],["ALTBalaji","#e5262b"],["Eros Now","#c4122f"],["ShemarooMe","#e8590c"],["Hungama Play","#e11d74"],["Chaupal","#2e7d32"],["Planet Marathi","#c2185b"],["FanCode","#f5821f"],["Epic On","#8e24aa"],["Docubay","#00796b"],["Klikk","#d81b60"],["MX Player","#1e88e5"]];
 const TERMS=[1,3,6,12],FEATS=["5G router free to use*","350 IPTV channels","20 OTT apps","Zero installation charges*","Free landline*"];
 const $=id=>document.getElementById(id),inr=n=>n.toLocaleString("en-IN"),waLink=m=>"https://wa.me/"+WA_NUMBER+"?text="+encodeURIComponent(m);
 const sn=m=>m>=1000?m/1000+" Gbps":m+" Mbps",su=m=>m>=1000?[m/1000,"Gbps"]:[m,"Mbps"];
@@ -38,7 +38,7 @@ function cards(){
   $("seg").innerHTML=TERMS.map(t=>`<button type="button" data-t="${t}" aria-pressed="${t===term}">${lbl(t)}</button>`).join("");
   $("grid").innerHTML=PLANS.map(p=>{const tot=p.price[term],pm=Math.round(tot/term),sv=p.price[1]*term-tot;
     const per=term===1?"Pay month to month":`Rs ${inr(pm)} a month`+(sv>0?` <mark>Save Rs ${inr(sv)}</mark>`:"");
-    return `<article class="card" data-m="${p.mbps}"><span class="tag" style="display:none">Suggested for you</span><div class="mbps">${su(p.mbps)[0]}<small>${su(p.mbps)[1]}</small></div><div class="unl">Unlimited internet</div><div class="price"><sup>Rs</sup><span class="pn" data-m="${p.mbps}" data-v="${tot}">${inr(tot)}</span></div><div class="per">${per}</div><ul>${FEATS.map(f=>`<li>${f}</li>`).join("")}</ul><div class="oapps"><span>Included OTT apps</span><div>${OTT.filter(o=>o[2]).map(o=>`<img src="${root}${o[2]}" alt="${o[0]}" title="${o[0]}">`).join("")}<em>+${OTT.length-OTT.filter(o=>o[2]).length} more</em></div></div>
+    return `<article class="card" data-m="${p.mbps}"><span class="tag" style="display:none">Suggested for you</span><div class="mbps">${su(p.mbps)[0]}<small>${su(p.mbps)[1]}</small></div><div class="unl">Unlimited internet</div><div class="price"><sup>Rs</sup><span class="pn" data-m="${p.mbps}" data-v="${tot}">${inr(tot)}</span></div><div class="per">${per}</div><ul>${FEATS.map(f=>`<li>${f}</li>`).join("")}</ul><div class="oapps"><span>Included OTT apps</span><div>${["JioHotstar","SonyLIV","ZEE5","ALTBalaji"].map(n=>`<img src="${root}ott/${slug(n)}.png" alt="${n}" title="${n}" onerror="this.remove()">`).join("")}<em>+${OTT.length-4} more</em></div></div>
     <a class="btn" target="_blank" rel="noopener" href="${waLink(`Hi Shri Fibernet, I want the ${sn(p.mbps)} plan for ${lbl(term)} (Rs ${tot}).`)}">Get started</a><a class="more" href="plans/${p.mbps}-mbps.html">Plan details</a></article>`}).join("");
   window._pv=window._pv||{};
   document.querySelectorAll(".pn").forEach(el=>{const to=+el.dataset.v,m=el.dataset.m,from=window._pv[m]===undefined?to:window._pv[m];window._pv[m]=to;if(from===to)return;
@@ -70,7 +70,8 @@ function dlBars(){document.querySelectorAll(".dl[data-t]").forEach(r=>{const m=+
 if($("tabs")){$("tabs").onclick=e=>{const b=e.target.closest("button");if(!b)return;document.querySelectorAll("#tabs button").forEach(x=>x.setAttribute("aria-selected",x===b));
   document.querySelectorAll(".pane").forEach(p=>p.classList.toggle("on",p.dataset.pane===b.dataset.p));if(b.dataset.p==="0")dlBars()};dlBars()}
 
-const tile=o=>`<span class="otile${o[2]?" im":""}" style="--c:${o[1]}" title="${o[0]}">${o[2]?`<img src="${root}${o[2]}" alt="${o[0]}">`:`<i></i><b>${o[0]}</b>`}</span>`;
+const slug=n=>n.toLowerCase().replace(/[^a-z0-9]/g,"");
+const tile=o=>{const s=slug(o[0]);return `<span class="otile" style="--c:${o[1]}" title="${o[0]}"><img src="${root}ott/${s}.png" alt="${o[0]}" onload="this.parentNode.classList.add('im')" onerror="if(!this.dataset.s){this.dataset.s=1;this.src='${root}ott/${s}.svg'}else{this.remove()}"><i></i><b>${o[0]}</b></span>`};
 document.querySelectorAll("[data-ott]").forEach(el=>{
   const all=OTT.map(tile).join("");
   if(el.dataset.ott==="marquee"){el.classList.add("marq");const rv=OTT.slice().reverse().map(tile).join("");el.innerHTML=`<div class="mtrack">${all}${all}</div><div class="mtrack rev">${rv}${rv}</div>`}

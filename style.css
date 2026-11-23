@@ -262,3 +262,11 @@ body{animation:pagein .6s both}
 .mtrack.rev{animation-duration:46s}
 .seg button{transition:background .25s,color .25s}
 .rail b,.mbps{transition:transform .25s}.rail a:hover b{transform:scale(1.08);transform-origin:left}
+
+/* OTT logo tiles: same size as name tiles, logo centred */
+.otile img{display:none}.otile.im img{display:block}.otile.im i,.otile.im b{display:none}
+.otile.im{min-width:100px;width:auto;padding:0 14px;background:var(--card);border:1px solid var(--line)}
+.otile.im img{height:46px;width:46px;border-radius:11px;box-shadow:none}
+.otile.im:hover{transform:translateY(-3px);border-color:var(--c);box-shadow:0 14px 26px -16px var(--c)}
+.otile.im:hover img{box-shadow:none}
+.ogrid .otile.im{width:auto;justify-self:stretch}
